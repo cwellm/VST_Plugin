@@ -1,0 +1,16 @@
+name: Default Issue Template
+description: Describe the issue and give a list of acceptance criteria.
+labels:
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Description**
+        As a ... I want to ... (issue story)
+
+        **Acceptance Criteria**
+        - [ ] criterion 1
+        - [ ] criterion 2
+
+        **Additional context**
+        Add any other context necessary to solve this issue.
