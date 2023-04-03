@@ -1,0 +1,6 @@
+[settings]
+arch=x86_64
+compiler=gcc
+compiler.cppstd=17
+compiler.version=9
+os=Linux
