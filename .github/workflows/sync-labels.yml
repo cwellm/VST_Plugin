@@ -1,0 +1,24 @@
+name: Sync labels
+on:
+  # You can run this with every type of event, but it's better to run it only when you actually need it.
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  labels:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: EndBug/label-sync@v2
+        with:
+          config-file: .github/config/labels.yml
+          # If you want to delete any additional label, set this to true
+          delete-other-labels: true
+
+          # If you want the action just to show you the preview of the changes, without actually editing the labels, set this to true
+          dry-run: false
+
+          # You can change the token used to change the labels, this is the default one
+          token: ${{ secrets.GITHUB_TOKEN }}

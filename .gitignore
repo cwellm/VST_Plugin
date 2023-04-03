@@ -1,0 +1,5 @@
+build/
+
+# JUCE
+src/JUCE/JUCE-*
+src/JUCE/juce.zip
