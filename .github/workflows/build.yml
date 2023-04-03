@@ -25,10 +25,10 @@ jobs:
       - name: Install Python dependencies for build scripts
         run: pip install -r requirements.txt
       - name: Install OS specific configuration (Linux)
-        if: ${{ contains(matrix.os, "ubuntu") }}
+        if: ${{ contains(matrix.os, 'ubuntu') }}
         run: conan config install "config/dep/conan/linux.conanprofile"
       - name: Install OS specific configuration (Windows)
-        if: ${{ contains(matrix.os, "windows") }}
+        if: ${{ contains(matrix.os, 'windows') }}
         run: conan config install "config/dep/conan/windows.conanprofile"
       - name: Create build tree
         run: conan install . --output-folder=build --build=missing
