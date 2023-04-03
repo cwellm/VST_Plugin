@@ -4,7 +4,10 @@ title: "[New Issue]: "
 labels:
 body:
   - type: textarea
+    id: description
     attributes:
+      label: Description
+      description: Describe the issue
       value: |
         **Description**
         As a ... I want to ... (issue story)
