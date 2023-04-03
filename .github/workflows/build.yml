@@ -12,9 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04, ubuntu-20.04, windows-2019, windows-2022]
-        version: [10, 12, 14]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.version }}
+      - name: "Build info"
+        run: echo "Trying to build on OS ${{ matrix.os }}"
