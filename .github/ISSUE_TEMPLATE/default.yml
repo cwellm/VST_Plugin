@@ -1,8 +1,9 @@
 name: Default Issue Template
 description: Describe the issue and give a list of acceptance criteria.
+title: "[New Issue]: "
 labels:
 body:
-  - type: markdown
+  - type: textarea
     attributes:
       value: |
         **Description**

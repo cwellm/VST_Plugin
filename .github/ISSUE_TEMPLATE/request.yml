@@ -3,7 +3,7 @@ description: Put a feature request.
 title: "[Feature Request]: "
 labels: ["request"]
 body:
-  - type: markdown
+  - type: textarea
     attributes:
       value: |
         **Is your feature request related to a problem? Please describe.**
