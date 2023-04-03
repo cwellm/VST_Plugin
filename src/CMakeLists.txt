@@ -56,3 +56,11 @@ target_link_libraries(Additive_Synth
         juce::juce_recommended_warning_flags)
 
 juce_generate_juce_header(Additive_Synth)
+
+# add sources from synth subdir
+target_sources(Additive_Synth PRIVATE
+	synth/SineGenerator.h
+	synth/SineGenerator.cpp
+	util/SoundProcessor.h
+	util/SoundProcessor.cpp
+)
