@@ -32,7 +32,12 @@ jobs:
           conan config install "config/dep/conan/profiles/linux.conanprofile" -tf=profiles
           conan install . --output-folder=build --build=missing --profile:build=linux.conanprofile --profile:host=linux.conanprofile
       - name: Install OS specific configuration and build tree (Windows)
-        if: ${{ contains(matrix.os, 'windows') }}
+        if: ${{ contains(matrix.os, 'windows') && contains(matrix.os, '2019') }}
         run: | 
           conan config install "config/dep/conan/profiles/windows.conanprofile" -tf=profiles
-          conan install . --output-folder=build --build=missing --profile:build=windows.conanprofile --profile:host=windows.conanprofile
+          conan install . --output-folder=build --build=missing --profile:build=windows2019.conanprofile --profile:host=windows2019.conanprofile
+      - name: Install OS specific configuration and build tree (Windows)
+        if: ${{ contains(matrix.os, 'windows') && contains(matrix.os, '2022') }}
+        run: | 
+          conan config install "config/dep/conan/profiles/windows.conanprofile" -tf=profiles
+          conan install . --output-folder=build --build=missing --profile:build=windows2022.conanprofile --profile:host=windows2022.conanprofile
