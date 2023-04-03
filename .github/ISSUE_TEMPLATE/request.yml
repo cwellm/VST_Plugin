@@ -4,6 +4,7 @@ title: "[Feature Request]: "
 labels: ["request"]
 body:
   - type: textarea
+    id: info
     attributes:
       value: |
         **Is your feature request related to a problem? Please describe.**
