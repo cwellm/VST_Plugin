@@ -48,6 +48,5 @@ class VSTRecipe(ConanFile):
         cmake.configure(variables=juce_options)
 
     def build(self):
-        pass
-    #    cmake = CMake(self)
-    #    cmake.build()
+        cmake = CMake(self)
+        cmake.build()
