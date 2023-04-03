@@ -13,7 +13,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04, ubuntu-20.04, windows-2019, windows-2022]
     runs-on: ${{ matrix.os }}
-    continue-on-error: true
+    continue-on-error: false
     steps:
       - name: "Build info"
         run: echo "Trying to build on OS ${{ matrix.os }}"
