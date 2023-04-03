@@ -35,13 +35,13 @@ jobs:
             libxcursor-dev libxinerama-dev libxrandr-dev mesa-common-dev
           conan config install "config/dep/conan/profiles/linux.conanprofile" -tf=profiles
           conan install . --output-folder=build --build=missing --profile:build=linux.conanprofile --profile:host=linux.conanprofile
-      - name: Install OS specific configuration and build tree (Windows)
+      - name: Install OS specific configuration and build tree (Windows 2019)
         if: ${{ contains(matrix.os, 'windows') && contains(matrix.os, '2019') }}
         run: | 
-          conan config install "config/dep/conan/profiles/windows.conanprofile" -tf=profiles
+          conan config install "config/dep/conan/profiles/windows2019.conanprofile" -tf=profiles
           conan install . --output-folder=build --build=missing --profile:build=windows2019.conanprofile --profile:host=windows2019.conanprofile
-      - name: Install OS specific configuration and build tree (Windows)
+      - name: Install OS specific configuration and build tree (Windows 2022)
         if: ${{ contains(matrix.os, 'windows') && contains(matrix.os, '2022') }}
         run: | 
-          conan config install "config/dep/conan/profiles/windows.conanprofile" -tf=profiles
+          conan config install "config/dep/conan/profiles/windows2022.conanprofile" -tf=profiles
           conan install . --output-folder=build --build=missing --profile:build=windows2022.conanprofile --profile:host=windows2022.conanprofile
