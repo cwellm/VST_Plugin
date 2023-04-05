@@ -62,6 +62,8 @@ target_sources(Additive_Synth PRIVATE
 	synth/SineGenerator.h
 	synth/SineGenerator.cpp
 	synth/AdditiveSynth.h
+	synth/QuantumEffects.h
+	synth/QuantumEffects.cpp
 	util/SoundProcessor.h
 	util/SoundProcessor.cpp
 )

@@ -64,6 +64,8 @@ public:
     juce::AudioParameterFloat* paramD;
     juce::AudioParameterFloat* paramS;
     juce::AudioParameterFloat* paramR;
+    juce::AudioParameterFloat* paramPhi;
+    juce::AudioParameterFloat* paramTheta;
 
 private:
     std::unique_ptr<cw::synth::AdditiveSynth> additiveSynth;

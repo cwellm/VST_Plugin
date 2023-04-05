@@ -3,8 +3,9 @@
 #include <JuceHeader.h>
 #include "../util/SoundProcessor.h"
 #include "SineGenerator.h"
+#include "QuantumEffects.h"
 
-#define ADDSYNTH_MAXPOLYPHONY 4
+#define ADDSYNTH_MAXPOLYPHONY 8
 
 namespace cw::synth {
 
@@ -62,6 +63,7 @@ struct AddSynthVoice : public juce::SynthesiserVoice
         else
         {
             clearCurrentNote();
+            rotator.clearBuffer();
             angleDelta = 0.0;
         }
 
@@ -73,32 +75,31 @@ struct AddSynthVoice : public juce::SynthesiserVoice
 
     void renderNextBlock(juce::AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override
     {
-        //adsrCurve.
         auto synthesizedOutput = harmProcessor->process(numSamples, 1., this->midiNoteNumber);
+        auto quantumTransformedOutput = rotator.spinRotate(std::array<std::vector<float>, 2>{synthesizedOutput,
+            synthesizedOutput});
         if (tailOff > 0.0) {
-            for (int sampleNo = 0; sampleNo < numSamples; ++sampleNo) {
-                auto currentSample = synthesizedOutput[sampleNo] * 0.1 * adsrCurve.getNextSample();
+            for (int sampleNo = 0; sampleNo < quantumTransformedOutput[0].size(); ++sampleNo) {
                 for (auto i = outputBuffer.getNumChannels(); --i >= 0;) {
+                    auto currentSample = quantumTransformedOutput[i].at(sampleNo) * 0.1 * adsrCurve.getNextSample();
                     outputBuffer.addSample(i, startSample, currentSample);
                 }
                 currentAngle += angleDelta;
                 tailOff = adsrCurve.getNextSample();
-                //tailOff *= 0.9;
                 ++startSample;
                 if (tailOff <= 0.005)
                 {
-                    clearCurrentNote(); // [9]
-
-                    angleDelta = 0.0;
+                    clearCurrentNote();
+                    rotator.clearBuffer();
+                    angleDelta = 0.0;       
                     break;
                 }
             }
         }
         else {
-            for (int sampleNo = 0; sampleNo < numSamples; ++sampleNo) {
-                //auto currentSample = (float)(std::sin(currentAngle) * level);
-                auto currentSample = synthesizedOutput[sampleNo] * 0.1 * adsrCurve.getNextSample();
+            for (int sampleNo = 0; sampleNo < quantumTransformedOutput[0].size(); ++sampleNo) {
                 for (auto i = outputBuffer.getNumChannels(); --i >= 0;) {
+                    auto currentSample = quantumTransformedOutput[i].at(sampleNo) * 0.1 * adsrCurve.getNextSample();
                     outputBuffer.addSample(i, startSample, currentSample);
                 }
                 currentAngle += angleDelta;
@@ -116,12 +117,21 @@ struct AddSynthVoice : public juce::SynthesiserVoice
         adsrCurve.setParameters(juce::ADSR::Parameters(a*2, d, s, r*3));
     }
 
+    void setPhi(float phi) {
+        rotator.setPhi(phi);
+    }
+
+    void setTheta(float theta) {
+        rotator.setTheta(theta);
+    }
+
     private:
         std::shared_ptr<HarmonicSoundProcessor> harmProcessor;
         int midiNoteNumber;
         // for testing...
         double currentAngle = 0.0, angleDelta = 0.0, level = 0.0, tailOff = 0.0;
         juce::ADSR adsrCurve;
+        Spin3Rotation rotator{};
 };
 
 //===================================================================================

@@ -34,6 +34,8 @@ private:
     juce::Slider dVal;
     juce::Slider sVal;
     juce::Slider rVal;
+    juce::Slider phiVal;
+    juce::Slider thetaVal;
 
     // add listener
     void sliderValueChanged(juce::Slider* slider) override;

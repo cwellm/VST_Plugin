@@ -3,17 +3,17 @@
 #include <cmath>
 
 namespace cw::synth {
-    std::unique_ptr<float[]> HarmonicSoundProcessor::process(int noSamples, float refFrequency, int midiNoteNumber) {
+    std::vector<float> HarmonicSoundProcessor::process(int noSamples, float refFrequency, int midiNoteNumber) {
         // A4: midi no. 69, pitch 440 Hz
         float midiFreq = 440. * std::pow(2., (midiNoteNumber - 69.)/12.);
         return process(noSamples, midiFreq, refFrequency);
     }
-    std::unique_ptr<float[]> HarmonicSoundProcessor::process(int noSamples, float frequency, float refFreq) {
+    std::vector<float> HarmonicSoundProcessor::process(int noSamples, float frequency, float refFreq) {
         return process(noSamples, frequency/refFreq);
 
     }
-    std::unique_ptr<float[]> HarmonicSoundProcessor::process(int noSamples, float playingFactor) {
-        auto result = std::make_unique<float[]>(noSamples);
+    std::vector<float> HarmonicSoundProcessor::process(int noSamples, float playingFactor) {
+        auto result = std::vector<float>(noSamples);
         float a_0, a_1; // linear interpolation: y_f = a_1*x_f + a_0
         int pos_0, pos_1;
 

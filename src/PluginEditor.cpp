@@ -64,7 +64,24 @@ NewProjectAudioProcessorEditor::NewProjectAudioProcessorEditor (NewProjectAudioP
     rVal.setName("Attack");
     this->addAndMakeVisible(rVal);
     rVal.addListener(this);
+
+    // Quantum Angles
+    phiVal.setSliderStyle(juce::Slider::LinearBar);
+    phiVal.setRange(0.0, juce::MathConstants<float>::pi * 2, 0.01);
+    phiVal.setValue(p.paramPhi->get());
+    phiVal.setName("Phi");
+    this->addAndMakeVisible(phiVal);
+    phiVal.addListener(this);
+
+    thetaVal.setSliderStyle(juce::Slider::LinearBar);
+    thetaVal.setRange(0.0, juce::MathConstants<float>::pi * 2, 0.01);
+    thetaVal.setValue(p.paramTheta->get());
+    thetaVal.setName("Theta");
+    this->addAndMakeVisible(thetaVal);
+    thetaVal.addListener(this);
 }
+
+
 
 NewProjectAudioProcessorEditor::~NewProjectAudioProcessorEditor()
 {
@@ -93,6 +110,9 @@ void NewProjectAudioProcessorEditor::resized()
     dVal.setBounds(250, 110, 150, 20);
     sVal.setBounds(250, 170, 150, 20);
     rVal.setBounds(250, 230, 150, 20);
+
+    phiVal.setBounds(250, 290, 150, 20);
+    thetaVal.setBounds(250, 350, 150, 20);
 }
 
 //==============================================================================
@@ -116,6 +136,14 @@ void NewProjectAudioProcessorEditor::sliderValueChanged(juce::Slider* slider) {
     }
     if (slider == &rVal) {
         *audioProcessor.paramR = slider->getValue();
+    }
+
+    if (slider == &phiVal) {
+        *audioProcessor.paramPhi = slider->getValue();
+    }
+
+    if (slider == &thetaVal) {
+        *audioProcessor.paramTheta = slider->getValue();
     }
 
 }
