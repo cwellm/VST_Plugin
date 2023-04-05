@@ -61,6 +61,7 @@ juce_generate_juce_header(Additive_Synth)
 target_sources(Additive_Synth PRIVATE
 	synth/SineGenerator.h
 	synth/SineGenerator.cpp
+	synth/AdditiveSynth.h
 	util/SoundProcessor.h
 	util/SoundProcessor.cpp
 )
