@@ -8,6 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include <string>
 
 //==============================================================================
 NewProjectAudioProcessor::NewProjectAudioProcessor()
@@ -22,6 +23,26 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
                        )
 #endif
 {
+    additiveSynth = std::make_unique<cw::synth::AdditiveSynth>();
+    for (int i = 0; i < NO_ADDSYNTH_VOICES; ++i) {
+        if (i == 0) {
+            paramHarmGains.push_back(new juce::AudioParameterFloat("mod" + std::to_string(i), "Mod " + std::to_string(i), 0.0, 1.0, 1.0));
+        }
+        else {
+            paramHarmGains.push_back(new juce::AudioParameterFloat("mod" + std::to_string(i), "Mod " + std::to_string(i), 0.0, 1.0, 0.0));
+        }
+    }
+
+    // todo: init parameters and tell the harmGains in the SoundProcessor of it!
+    for (auto it = paramHarmGains.begin(); it != paramHarmGains.end(); ++it) {
+        addParameter(*it);
+    }
+
+    // ADSR
+    addParameter(paramA = new juce::AudioParameterFloat("attack", "Attack", 0.0, 1.0, 0.0));
+    addParameter(paramD = new juce::AudioParameterFloat("delay", "Delay", 0.0, 1.0, 0.5));
+    addParameter(paramS = new juce::AudioParameterFloat("sustain", "Sustain", 0.0, 1.0, 0.5));
+    addParameter(paramR = new juce::AudioParameterFloat("release", "Release", 0.0, 1.0, 0.1));
 }
 
 NewProjectAudioProcessor::~NewProjectAudioProcessor()
@@ -93,6 +114,7 @@ void NewProjectAudioProcessor::changeProgramName (int index, const juce::String&
 //==============================================================================
 void NewProjectAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    additiveSynth->prepareToPlay(samplesPerBlock, sampleRate);
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 }
@@ -135,6 +157,16 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+    // +++++++++++++++++++++ setting parameters ++++++++++++++++++++
+    auto voices = additiveSynth->getVoices();
+    for (auto voice : voices) {
+        for (int i = 0; i < NO_ADDSYNTH_VOICES; ++i) {
+            voice->getHarmProcessor()->setHarmGain(i, paramHarmGains.at(i)->get());
+        }
+        voice->setAdsrParameters(paramA->get(), paramD->get(), paramS->get(), paramR->get());
+    }
+
+
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
@@ -156,6 +188,8 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
         // ..do something to the data...
     }
+    additiveSynth->setMidiBuffer(midiMessages);
+    additiveSynth->getNextAudioBlock(AudioSourceChannelInfo(&buffer, 0, buffer.getNumSamples()));
 }
 
 //==============================================================================

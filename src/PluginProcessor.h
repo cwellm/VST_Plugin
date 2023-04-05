@@ -9,6 +9,8 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "synth/AdditiveSynth.h"
+#include <vector>
 
 //==============================================================================
 /**
@@ -56,7 +58,15 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    //============================ Parameters ==================================================
+    std::vector<juce::AudioParameterFloat*> paramHarmGains;
+    juce::AudioParameterFloat* paramA;
+    juce::AudioParameterFloat* paramD;
+    juce::AudioParameterFloat* paramS;
+    juce::AudioParameterFloat* paramR;
+
 private:
+    std::unique_ptr<cw::synth::AdditiveSynth> additiveSynth;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NewProjectAudioProcessor)
 };
