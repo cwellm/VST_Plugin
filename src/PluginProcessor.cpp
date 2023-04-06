@@ -43,6 +43,9 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
     addParameter(paramD = new juce::AudioParameterFloat("delay", "Delay", 0.0, 1.0, 0.5));
     addParameter(paramS = new juce::AudioParameterFloat("sustain", "Sustain", 0.0, 1.0, 0.5));
     addParameter(paramR = new juce::AudioParameterFloat("release", "Release", 0.0, 1.0, 0.1));
+
+    addParameter(paramPhi = new juce::AudioParameterFloat("phi", "Phi", 0.0, juce::MathConstants<float>::pi, 0.0));
+    addParameter(paramTheta = new juce::AudioParameterFloat("theta", "Theta", 0.0, juce::MathConstants<float>::pi, 0.0));
 }
 
 NewProjectAudioProcessor::~NewProjectAudioProcessor()
@@ -164,6 +167,8 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
             voice->getHarmProcessor()->setHarmGain(i, paramHarmGains.at(i)->get());
         }
         voice->setAdsrParameters(paramA->get(), paramD->get(), paramS->get(), paramR->get());
+        voice->setPhi(paramPhi->get());
+        voice->setTheta(paramTheta->get());
     }
 
 

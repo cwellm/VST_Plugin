@@ -48,16 +48,16 @@ class HarmonicSoundProcessor {
         * output array. The reference frequency is the frequency at which the original sound is meant to play, for a 
         * given sample rate. The size of the original sound vector signifies its original 'recording' sample rate. 
         */
-        std::unique_ptr<float[]> process(int, float, float);
+        std::vector<float> process(int, float, float);
         /* Processes the sound for the given MIDI note number, relative to the reference frequency, and writes the result 
          * to an output array. The reference frequency is the frequency at which the original sound is meant to play, for 
          * a given sample rate.
          */
-        std::unique_ptr<float[]> process(int, float, int);
+        std::vector<float> process(int, float, int);
         /* Processes the sound and writes the result to an output array. A relative playing speed different from one
          * controls the effective frequency, if the concept of 'frequency' makes sense for the sound.
          */
-        std::unique_ptr<float[]> process(int, float);
+        std::vector<float> process(int, float);
         // Resetting the position pointers. 
         void resetPos() {
             for (int i = 0; i < NO_ADDSYNTH_VOICES; ++i) {
