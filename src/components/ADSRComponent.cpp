@@ -46,7 +46,7 @@ ADSRComponent::ADSRComponent() {
     addAndMakeVisible(rLabel);
 }
 
-juce::Slider& const ADSRComponent::getComponent(std::string name) {
+juce::Slider& ADSRComponent::getComponent(std::string name) {
     if (name == "A") {
         return A;
     }

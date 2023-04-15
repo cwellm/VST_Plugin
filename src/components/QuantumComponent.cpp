@@ -63,7 +63,7 @@ void QuantumComponent::addListener(juce::Slider::Listener* listener) {
     theta.addListener(listener);
 }
 
-juce::Slider& const QuantumComponent::getComponent(std::string name) {
+juce::Slider& QuantumComponent::getComponent(std::string name) {
     if (name == "phi") {
         return phi;
     }

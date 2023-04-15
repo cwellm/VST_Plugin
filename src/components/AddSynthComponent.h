@@ -12,7 +12,7 @@ class AddSynthComponent : public juce::Component /*, public juce::Slider::Listen
 		void resized() override;
 		double getHarmGainsVal(int harm) { return harmGains.at(harm)->getValue(); }
 		void setHarmGainsVal(int harm, double value) { harmGains.at(harm)->setValue(value); }
-		juce::Slider& const getHarmGainsComponent(int harm) { return *harmGains.at(harm); }
+		juce::Slider& getHarmGainsComponent(int harm) { return *harmGains.at(harm); }
 		void addListener(juce::Slider::Listener*);
 
 	private:

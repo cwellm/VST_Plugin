@@ -14,7 +14,7 @@ class QuantumComponent : public juce::Component {
 		QuantumComponent();
 		void paint(juce::Graphics& g) override;
 		void resized() override;
-		juce::Slider& const getComponent(std::string);
+		juce::Slider& getComponent(std::string);
 		void addListener(juce::Slider::Listener*);
 
 
