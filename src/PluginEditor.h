@@ -10,6 +10,9 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "components/QuantumComponent.h"
+#include "components/AddSynthComponent.h"
+#include "components/ADSRComponent.h"
 
 //==============================================================================
 /**
@@ -29,13 +32,20 @@ private:
     // access the processor object that created it.
     NewProjectAudioProcessor& audioProcessor;
 
+    cw::synth::QuantumComponent quantumComponent;
+    cw::synth::ADSRComponent adsrComponent;
+    cw::synth::AddSynthComponent addSynthComponent;
+
     std::vector<std::unique_ptr<juce::Slider>> harmGains;
     juce::Slider aVal;
     juce::Slider dVal;
     juce::Slider sVal;
     juce::Slider rVal;
-    juce::Slider phiVal;
-    juce::Slider thetaVal;
+
+    // sizes
+    const int EDITORWIDTH{ 500 };
+    const int EDITORHEIGHT{ 550 };
+    const int AREAMARGIN{ 20 };
 
     // add listener
     void sliderValueChanged(juce::Slider* slider) override;

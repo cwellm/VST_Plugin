@@ -66,4 +66,10 @@ target_sources(Additive_Synth PRIVATE
 	synth/QuantumEffects.cpp
 	util/SoundProcessor.h
 	util/SoundProcessor.cpp
+	components/AddSynthComponent.h
+	components/AddSynthComponent.cpp
+	components/QuantumComponent.h
+	components/QuantumComponent.cpp 
+	components/ADSRComponent.h 
+	components/ADSRComponent.cpp 
 )

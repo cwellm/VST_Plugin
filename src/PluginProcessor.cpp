@@ -26,10 +26,10 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
     additiveSynth = std::make_unique<cw::synth::AdditiveSynth>();
     for (int i = 0; i < NO_ADDSYNTH_VOICES; ++i) {
         if (i == 0) {
-            paramHarmGains.push_back(new juce::AudioParameterFloat("mod" + std::to_string(i), "Mod " + std::to_string(i), 0.0, 1.0, 1.0));
+            paramHarmGains.push_back(new juce::AudioParameterFloat("harmonic" + std::to_string(i), "Harmonic " + std::to_string(i), 0.0, 1.0, 1.0));
         }
         else {
-            paramHarmGains.push_back(new juce::AudioParameterFloat("mod" + std::to_string(i), "Mod " + std::to_string(i), 0.0, 1.0, 0.0));
+            paramHarmGains.push_back(new juce::AudioParameterFloat("harmonic" + std::to_string(i), "Harmonic " + std::to_string(i), 0.0, 1.0, 0.0));
         }
     }
 
@@ -44,8 +44,8 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
     addParameter(paramS = new juce::AudioParameterFloat("sustain", "Sustain", 0.0, 1.0, 0.5));
     addParameter(paramR = new juce::AudioParameterFloat("release", "Release", 0.0, 1.0, 0.1));
 
-    addParameter(paramPhi = new juce::AudioParameterFloat("phi", "Phi", 0.0, juce::MathConstants<float>::pi, 0.0));
-    addParameter(paramTheta = new juce::AudioParameterFloat("theta", "Theta", 0.0, juce::MathConstants<float>::pi, 0.0));
+    addParameter(paramPhi = new juce::AudioParameterFloat("phi", "Phi", 0.0, 2 * juce::MathConstants<float>::pi, 0.0));
+    addParameter(paramTheta = new juce::AudioParameterFloat("theta", "Theta", 0.0, 2 * juce::MathConstants<float>::pi, 0.0));
 }
 
 NewProjectAudioProcessor::~NewProjectAudioProcessor()
