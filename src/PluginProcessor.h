@@ -67,8 +67,22 @@ public:
     juce::AudioParameterFloat* paramPhi;
     juce::AudioParameterFloat* paramTheta;
 
+    std::vector<float> paramHarmGainsTarget;
+    float paramATarget;
+    float paramDTarget;
+    float paramSTarget;
+    float paramRTarget;
+    float paramPhiTarget;
+    float paramThetaTarget;
+
 private:
     std::unique_ptr<cw::synth::AdditiveSynth> additiveSynth;
+
+    const float smRatADSR = 0.2;
+    const float smRatHarm = 0.2;
+    const float smRatQuantum = 0.2;
+    const float smRatEpsilon = 1e-4;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NewProjectAudioProcessor)
 };

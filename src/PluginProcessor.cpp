@@ -27,9 +27,11 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
     for (int i = 0; i < NO_ADDSYNTH_VOICES; ++i) {
         if (i == 0) {
             paramHarmGains.push_back(new juce::AudioParameterFloat("harmonic" + std::to_string(i), "Harmonic " + std::to_string(i), 0.0, 1.0, 1.0));
+            paramHarmGainsTarget.push_back(1.f);
         }
         else {
             paramHarmGains.push_back(new juce::AudioParameterFloat("harmonic" + std::to_string(i), "Harmonic " + std::to_string(i), 0.0, 1.0, 0.0));
+            paramHarmGainsTarget.push_back(0.f);
         }
     }
 
@@ -46,6 +48,20 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
 
     addParameter(paramPhi = new juce::AudioParameterFloat("phi", "Phi", 0.0, 2 * juce::MathConstants<float>::pi, 0.0));
     addParameter(paramTheta = new juce::AudioParameterFloat("theta", "Theta", 0.0, 2 * juce::MathConstants<float>::pi, 0.0));
+
+    // set initial target values
+    paramATarget = paramA->get();
+    paramDTarget = paramD->get();
+    paramSTarget = paramS->get();
+    paramRTarget = paramR->get();
+    paramPhiTarget = paramPhi->get();
+    paramThetaTarget = paramTheta->get();
+
+    auto itTarget = paramHarmGainsTarget.begin();
+    for (auto it = paramHarmGains.begin(); it != paramHarmGains.end(); ++it) {
+        *itTarget = (*it)->get();
+    }
+
 }
 
 NewProjectAudioProcessor::~NewProjectAudioProcessor()
@@ -161,10 +177,44 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
     // +++++++++++++++++++++ setting parameters ++++++++++++++++++++
+    // Parameter smoothing is applied. The target values are denoted by ending with *Target, the current values are 
+    // given by the param values themselves. The current values are iteratively updated with a ratio given by the 
+    // variables smRat*. 
+
+    if ((std::abs(paramATarget - paramA->get())) > smRatEpsilon) {
+        *paramA = paramA->get() + (paramATarget - paramA->get())*smRatADSR;
+    }
+
+    if ((std::abs(paramDTarget - paramD->get())) > smRatEpsilon) {
+        *paramD = paramD->get() + (paramDTarget - paramD->get()) * smRatADSR;
+    }
+
+    if ((std::abs(paramSTarget - paramS->get())) > smRatEpsilon) {
+        *paramS = paramS->get() + (paramSTarget - paramS->get()) * smRatADSR;
+    }
+
+    if ((std::abs(paramRTarget - paramR->get())) > smRatEpsilon) {
+        *paramR = paramR->get() + (paramRTarget - paramR->get()) * smRatADSR;
+    }
+
+    if ((std::abs(paramPhiTarget - paramPhi->get())) > smRatEpsilon) {
+        *paramPhi = std::fmod(paramPhi->get() + (paramPhiTarget - paramPhi->get()) * smRatQuantum,
+            2 * juce::MathConstants<float>::pi);
+    }
+
+    if ((std::abs(paramThetaTarget - paramTheta->get())) > smRatEpsilon) {
+        *paramTheta = std::fmod(paramTheta->get() + (paramThetaTarget - paramTheta->get()) * smRatQuantum,
+            2 * juce::MathConstants<float>::pi);
+    }
+
     auto voices = additiveSynth->getVoices();
     for (auto voice : voices) {
         for (int i = 0; i < NO_ADDSYNTH_VOICES; ++i) {
-            voice->getHarmProcessor()->setHarmGain(i, paramHarmGains.at(i)->get());
+            if ((std::abs(paramHarmGainsTarget.at(i) - paramHarmGains.at(i)->get())) > smRatEpsilon) {
+                *paramHarmGains.at(i) = paramHarmGains.at(i)->get() + (paramHarmGainsTarget.at(i) 
+                    - paramHarmGains.at(i)->get()) * smRatHarm;
+                voice->getHarmProcessor()->setHarmGain(i, paramHarmGains.at(i)->get());
+            }
         }
         voice->setAdsrParameters(paramA->get(), paramD->get(), paramS->get(), paramR->get());
         voice->setPhi(paramPhi->get());
@@ -187,12 +237,12 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
+    //for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    //{
+    //    auto* channelData = buffer.getWritePointer (channel);  
+    //}
 
-        // ..do something to the data...
-    }
+    // +++++++++++++++++++++ do processing ++++++++++++++++++++
     additiveSynth->setMidiBuffer(midiMessages);
     additiveSynth->getNextAudioBlock(AudioSourceChannelInfo(&buffer, 0, buffer.getNumSamples()));
 }

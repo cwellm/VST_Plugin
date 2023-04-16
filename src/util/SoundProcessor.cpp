@@ -44,30 +44,4 @@ namespace cw::synth {
         // TODO: error catching!
         params.harmonicGain[noHarmonic] = value;
     }
-
-    void HarmonicSoundProcessor::setP(char paramId, float value) {
-        // TODO: error catching!
-        switch (paramId) {
-            case 'A':
-            {
-                params.a = value;
-                break;
-            }
-            case 'D':
-            {
-                params.d = value;
-                break;
-            }
-            case 'S':
-            {
-                params.s = value;
-                break;
-            }
-            case 'R':
-            {
-                params.r = value;
-                break;
-            }
-        }
-    }
 } // namespace cw::synth

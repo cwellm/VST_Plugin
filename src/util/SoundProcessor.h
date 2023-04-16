@@ -9,10 +9,10 @@
 namespace cw::synth {
     
 struct SoundParameters {
-    float a;
-    float d;
-    float s;
-    float r;
+    float a; // currently not in use
+    float d; // currently not in use
+    float s; // currently not in use
+    float r; // currently not in use
     float harmonicGain[NO_ADDSYNTH_VOICES]; // 16 harmonics for each audio input
 };
 
@@ -29,15 +29,7 @@ class HarmonicSoundProcessor {
             continuousPos = std::make_unique<float[]>(NO_ADDSYNTH_VOICES);
             resetPos();
         };
-        // Sets the ADSR parameter given to the given value and applies some smoothing, where convenient.
-        void setP(char, float);
-        // Sets all ADSR parameters at once
-        void setPs(float a, float d, float s, float r) {
-            setP('A', a);
-            setP('D', d);
-            setP('S', s);
-            setP('R', r);
-        }
+
         // Sets the harmonic gain parameter at the given position and applies some smoothing, where convenient.
         void setHarmGain(int, float);
         // Sets the sample rate.
