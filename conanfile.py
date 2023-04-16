@@ -20,7 +20,8 @@ class VSTRecipe(ConanFile):
     SRC_FOLDER = "src"
 
     def requirements(self):
-        self.requires("zlib/1.2.13")
+        pass
+        #self.requires("zlib/1.2.13")
         #self.requires("armadillo/11.4.3")
 
     def build_requirements(self):
