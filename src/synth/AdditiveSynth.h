@@ -25,6 +25,7 @@ struct AddSynthVoice : public juce::SynthesiserVoice
         SineGenerator generator{ 44100, 1.0, 1.0 };
         harmProcessor = std::make_shared<HarmonicSoundProcessor>(generator.generate(), 44100);
         adsrCurve = juce::ADSR();
+        rotator.clearBuffer();
     }
 
     bool canPlaySound(juce::SynthesiserSound* sound) override
@@ -35,21 +36,16 @@ struct AddSynthVoice : public juce::SynthesiserVoice
     void startNote(int midiNoteNumber, float velocity,
         juce::SynthesiserSound*, int /*currentPitchWheelPosition*/) override
     {
+
+        rotator.clearBuffer();
         this->midiNoteNumber = midiNoteNumber;
         harmProcessor->resetPos();
         harmProcessor->setSampleRate(getSampleRate());
 
-        // for testing...
-        currentAngle = 0.0;
-        level = velocity * 0.15;
         tailOff = 0.0;
 
         adsrCurve.noteOn();
 
-        auto cyclesPerSecond = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
-        auto cyclesPerSample = cyclesPerSecond / getSampleRate();
-
-        angleDelta = cyclesPerSample * 2.0 * juce::MathConstants<double>::pi;
     }
 
     void stopNote(float /*velocity*/, bool allowTailOff) override
@@ -76,33 +72,30 @@ struct AddSynthVoice : public juce::SynthesiserVoice
     void renderNextBlock(juce::AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override
     {
         auto synthesizedOutput = harmProcessor->process(numSamples, 1., this->midiNoteNumber);
-        auto quantumTransformedOutput = rotator.spinRotate(std::array<std::vector<float>, 2>{synthesizedOutput,
+        auto outBuf = rotator.spinRotate(std::array<std::vector<float>, 2>{synthesizedOutput,
             synthesizedOutput});
         if (tailOff > 0.0) {
-            for (int sampleNo = 0; sampleNo < quantumTransformedOutput[0].size(); ++sampleNo) {
+            for (int sampleNo = 0; sampleNo < outBuf[0].size(); ++sampleNo) {
                 for (auto i = outputBuffer.getNumChannels(); --i >= 0;) {
-                    auto currentSample = quantumTransformedOutput[i].at(sampleNo) * 0.1 * adsrCurve.getNextSample();
+                    auto currentSample = outBuf[i][sampleNo] * 0.1 * adsrCurve.getNextSample();
                     outputBuffer.addSample(i, startSample, currentSample);
                 }
-                currentAngle += angleDelta;
                 tailOff = adsrCurve.getNextSample();
                 ++startSample;
                 if (tailOff <= 0.005)
                 {
                     clearCurrentNote();
-                    rotator.clearBuffer();
-                    angleDelta = 0.0;       
+                    rotator.clearBuffer();      
                     break;
                 }
             }
         }
         else {
-            for (int sampleNo = 0; sampleNo < quantumTransformedOutput[0].size(); ++sampleNo) {
+            for (int sampleNo = 0; sampleNo < outBuf[0].size(); ++sampleNo) {
                 for (auto i = outputBuffer.getNumChannels(); --i >= 0;) {
-                    auto currentSample = quantumTransformedOutput[i].at(sampleNo) * 0.1 * adsrCurve.getNextSample();
+                    auto currentSample = outBuf[i][sampleNo] * 0.1 * adsrCurve.getNextSample();
                     outputBuffer.addSample(i, startSample, currentSample);
                 }
-                currentAngle += angleDelta;
                 ++startSample;
             }
         }

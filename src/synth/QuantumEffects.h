@@ -35,7 +35,7 @@ struct Spin3 {
 
 class Spin3Rotation {
 	public:
-		Spin3Rotation() {}
+		Spin3Rotation();
 		// Clears the buffer - should always be called when a note stops playing. 
 		void clearBuffer();
 		/*
@@ -44,7 +44,7 @@ class Spin3Rotation {
 		* the right channel. The left channel is treated as real, the right channel as imaginary part. For the ouput,
 		* it is vice versa: Real to left, imaginary to right. 
 		*/
-		std::array<std::vector<float>, 2> spinRotate (std::array<std::vector<float>, 2> inVec);
+		std::array<std::vector<float>, 2> spinRotate(const std::array<std::vector<float>, 2>& inVec);
 
 		void setTheta(float theta) { this->theta = theta; }
 		void setPhi(float phi) { this->phi = phi; }
@@ -62,11 +62,11 @@ class Spin3Rotation {
 		* Convenience method to multiply a complex matrix with a complex vector and output the result. The matrix is
 		* expected to be square, and thus fitting the length of the vector. 
 		*/
-		cVector matMult(cMatrix matrix, cVector inVec, float factor);
+		cVector matMult(const cMatrix& matrix, const cVector& inVec, float factor);
 		/*
 		* Convenience method to add two complex vectors.
 		*/
-		cVector cVecAdd(cVector, cVector);
+		cVector cVecAdd(const cVector&, const cVector&);
 
 };
 

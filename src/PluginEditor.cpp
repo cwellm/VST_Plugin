@@ -82,31 +82,31 @@ void NewProjectAudioProcessorEditor::resized()
 void NewProjectAudioProcessorEditor::sliderValueChanged(juce::Slider* slider) {
     for (int i = 0; i < NO_ADDSYNTH_VOICES; ++i) {
         if (slider == &addSynthComponent.getHarmGainsComponent(i)) {
-            *audioProcessor.paramHarmGains.at(i) = slider->getValue();
+            audioProcessor.paramHarmGainsTarget.at(i) = slider->getValue();
         }
     }
 
     if (slider == &adsrComponent.getComponent("A")) {
-        *audioProcessor.paramA = slider->getValue();
+        audioProcessor.paramATarget = slider->getValue();
     }
 
     if (slider == &adsrComponent.getComponent("D")) {
-        *audioProcessor.paramD = slider->getValue();
+        audioProcessor.paramDTarget = slider->getValue();
     }
 
     if (slider == &adsrComponent.getComponent("S")) {
-        *audioProcessor.paramS = slider->getValue();
+        audioProcessor.paramSTarget = slider->getValue();
     }
     if (slider == &adsrComponent.getComponent("R")) {
-        *audioProcessor.paramR = slider->getValue();
+        audioProcessor.paramRTarget = slider->getValue();
     }
 
     if (slider == &quantumComponent.getComponent("phi")) {
-        *audioProcessor.paramPhi = std::fmod(slider->getValue(), 2*juce::MathConstants<float>::pi);
+        audioProcessor.paramPhiTarget = std::fmod(slider->getValue(), 2*juce::MathConstants<float>::pi);
     }
 
     if (slider == &quantumComponent.getComponent("theta")) {
-        *audioProcessor.paramTheta = std::fmod(slider->getValue(), 2 * juce::MathConstants<float>::pi);
+        audioProcessor.paramThetaTarget = std::fmod(slider->getValue(), 2 * juce::MathConstants<float>::pi);
    }
 
 }
