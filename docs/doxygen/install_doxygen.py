@@ -35,10 +35,6 @@ class DOXYGENInstallation:
 
     def build(self):
         print(f"Installing Doxygen version {self.__doxygen_version}")
-        if os.path.exists(Path(self.__doxygen_binary_dir)):
-            print("Apparently, the binary has already been built. Aborting build.")
-            print(f"In case this message is unexpected, please remove {self.__doxygen_gen_folder} and try again.")
-            return
 
         subprocess.run(["cmake", "--build", self.__doxygen_gen_folder])
 
