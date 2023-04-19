@@ -20,8 +20,8 @@ message(STATUS "Package JUCE found!")
 #//  override byte to prevent clashes with <cstddef>
 #define byte win_byte_override
 
-add_compile_definitions(NOMINMAX=1 byte=win_byte_override)
-add_compile_definitions(_HAS_STD_BYTE=0)
+#add_compile_definitions(NOMINMAX=1 byte=win_byte_override)
+#add_compile_definitions(_HAS_STD_BYTE=0)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 
