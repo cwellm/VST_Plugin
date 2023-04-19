@@ -31,7 +31,8 @@ class DOXYGENInstallation:
 
         # configure and install the JUCE package
         print("Generating Doxygen build tree...")
-        subprocess.run(["cmake", "-S", self.__doxygen_download_folder, "-B", self.__doxygen_gen_folder])
+        proc = subprocess.run(["cmake", "-S", self.__doxygen_download_folder, "-B", self.__doxygen_gen_folder])
+        proc.wait()
 
     def build(self):
         print(f"Installing Doxygen version {self.__doxygen_version}")
@@ -40,7 +41,9 @@ class DOXYGENInstallation:
             print(f"In case this message is unexpected, please remove {self.__doxygen_gen_folder} and try again.")
             return
 
-        subprocess.run(["cmake", "--build", self.__doxygen_gen_folder])
+        proc = subprocess.run(["cmake", "--build", self.__doxygen_gen_folder])
+        proc.wait()
+
 
     def get_source(self):
 
