@@ -28,7 +28,8 @@ class JUCEInstallation:
 
         # configure and install the JUCE package
         print("Generating JUCE build tree...")
-        subprocess.run(["cmake", "-S", self.__juce_download_folder, "-B", self.__juce_gen_folder, f"-DCMAKE_INSTALL_PREFIX={installation_directory}"])
+        subprocess.run(["cmake", "-S", self.__juce_download_folder, "-B", self.__juce_gen_folder, 
+                        f"-DCMAKE_INSTALL_PREFIX={installation_directory}"])
 
     def build(self):
         print(f"Installing JUCE version {self.__juce_version}")
@@ -39,7 +40,8 @@ class JUCEInstallation:
         # Immutable source .zip
         if not os.path.exists(Path(self.__juce_download_folder)):
             print("Downloading JUCE source...")
-            r = requests.get(f"https://github.com/juce-framework/JUCE/archive/refs/tags/{self.__juce_version}.zip")
+            r = requests.get(f"https://github.com/juce-framework/JUCE/archive/refs/tags/\
+                             {self.__juce_version}.zip")
             with open(zip_name, "wb") as file:
                 file.write(r.content)
             with zipfile.ZipFile(zip_name, "r") as zip_file:

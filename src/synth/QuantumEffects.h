@@ -11,7 +11,14 @@ namespace cw::synth {
 using cVector = std::vector<std::complex<float>>;
 using cMatrix = std::vector<cVector>;
 
+/**
+ * 
+ * This structure supplies the S_x, S_y and S_z components of spin matrices (see, e.g. 
+ * https://en.wikipedia.org/wiki/Spin_(physics) for further explanation). The imaginary unit is also defined 
+ * for convenience.
+ */
 struct Spin3 {
+
 	const std::complex<float> imag{ 0, 1 };
 	const cMatrix S_x = { 
 		{0, std::sqrt(3), 0, 0},
@@ -46,6 +53,11 @@ class Spin3Rotation {
 		*/
 		std::array<std::vector<float>, 2> spinRotate(const std::array<std::vector<float>, 2>& inVec);
 
+		/**
+		 * Sets the theta angle (in radians).
+		 * 
+		 * @param theta theta angle
+		*/
 		void setTheta(float theta) { this->theta = theta; }
 		void setPhi(float phi) { this->phi = phi; }
 
@@ -58,10 +70,15 @@ class Spin3Rotation {
 		* time there are remaining samples from the last chunk to be processed, these will be the first to be picked.
 		*/
 		std::queue<std::complex<float>> buffer;
-		/*
-		* Convenience method to multiply a complex matrix with a complex vector and output the result. The matrix is
-		* expected to be square, and thus fitting the length of the vector. 
-		*/
+		/**
+		 * Convenience method to multiply a complex matrix with a complex vector and output the result. The matrix is
+		 * expected to be square, and thus fitting the length of the vector. 
+		 * 
+		 * @param matrix the square matrix
+		 * @param inVec the input vector
+		 * @param factor a customary factor to scale the output vector
+		 */
+
 		cVector matMult(const cMatrix& matrix, const cVector& inVec, float factor);
 		/*
 		* Convenience method to add two complex vectors.

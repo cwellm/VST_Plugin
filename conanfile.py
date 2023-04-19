@@ -1,5 +1,6 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
+from conan.tools.microsoft import MSBuildToolchain
 
 import os
 import shutil
@@ -17,12 +18,16 @@ class VSTRecipe(ConanFile):
     JUCE_VERSION = "7.0.5"
     JUCE_INSTALLATION_REL_DIRECTORY = f"JUCE-{JUCE_VERSION}"
     JUCE_OPTIONS = {"JUCE_ENABLE_MODULE_SOURCE_GROUPS": "ON", "JUCE_BUILD_EXTRAS": "ON"}
+
+    DOXYGEN_VERSION = "1.9.6"
+
     SRC_FOLDER = "src"
 
     def requirements(self):
         pass
         #self.requires("zlib/1.2.13")
         #self.requires("armadillo/11.4.3")
+        #self.requires("doxygen/1.9.4")
 
     def build_requirements(self):
         self.tool_requires("cmake/[>3.20.6]")
@@ -32,6 +37,7 @@ class VSTRecipe(ConanFile):
 
     def generate(self):
 
+        
         juce_installation_dir = self.generators_folder + "/" + self.JUCE_INSTALLATION_REL_DIRECTORY
         juce_installation(self.JUCE_VERSION, juce_installation_dir)
 
@@ -44,8 +50,9 @@ class VSTRecipe(ConanFile):
         cmake = CMake(self)
         juce_options = self.JUCE_OPTIONS
 
-        #juce_options |= {"CMAKE_PREFIX_PATH": juce_installation_dir}
-        juce_options.update({"CMAKE_PREFIX_PATH": juce_installation_dir, "JUCE_MODULE_INCLUDE_DIR": juce_installation_dir + f"/include/JUCE-{self.JUCE_VERSION}/modules"})
+        juce_options |= {"CMAKE_PREFIX_PATH": juce_installation_dir}
+        juce_options.update({"CMAKE_PREFIX_PATH": juce_installation_dir, "JUCE_MODULE_INCLUDE_DIR": 
+                             juce_installation_dir + f"/include/JUCE-{self.JUCE_VERSION}/modules"})
         cmake.configure(variables=juce_options)
 
     def build(self):

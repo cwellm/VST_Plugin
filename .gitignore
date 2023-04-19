@@ -6,3 +6,11 @@ src/JUCE/juce.zip
 
 # diverse
 localnotes*
+
+# Doxygen
+docs/doxygen/doxygen*
+docs/generated
+
+# Python 
+*.pyc
+__pycache__
