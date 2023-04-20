@@ -4,6 +4,8 @@ import requests
 from requests import HTTPError
 import zipfile
 import argparse
+import platform
+import os
 
 import conan.cli.cli as c
 
@@ -15,6 +17,7 @@ from pathlib import Path
 from conan.tools.files import download, unzip, check_sha1
 
 DOXYGEN_VERSION = "1.9.6"
+WIN_FLEX_BISON_VERSION = "2.5.25"
 
 class DOXYGENInstallation:
 
@@ -56,8 +59,37 @@ class DOXYGENInstallation:
             with zipfile.ZipFile(zip_name, "r") as zip_file:
                 zip_file.extractall(self.__this_folder)
 
+        # Flex and Bison need to be supplied
+        if "windows" in platform.system().lower():
+            self.win_get_flex_bison()
+
     def get_binary_dir(self):
         return self.__doxygen_binary_dir
+    
+    def win_get_flex_bison(self):
+        os.environ["PATH"] += self.__this_folder
+
+        if os.path.exists(self.__this_folder + "/bison.exe"):
+            print("Apparently, Flex and Bison for Windows have already been downloaded. Returning...")
+            return
+
+        zip_name = f"win_flex_bison-{WIN_FLEX_BISON_VERSION}.zip"
+        print(f"Getting Flex and Bison version {WIN_FLEX_BISON_VERSION} for Windows...")
+        r = requests.get(f"https://github.com/lexxmark/winflexbison/releases/download/v{WIN_FLEX_BISON_VERSION}/"
+                         f"win_flex_bison-{WIN_FLEX_BISON_VERSION}.zip", allow_redirects=True)
+        response_code = r.status_code
+        if (response_code > 399):
+            raise HTTPError(f"Error while trying to download Doxygen Release file: Error code {response_code}")
+        
+        with open(zip_name, "wb") as file:
+            file.write(r.content)
+        with zipfile.ZipFile(zip_name, "r") as zip_file:
+            zip_file.extract("win_bison.exe", self.__this_folder)
+            zip_file.extract("win_flex.exe", self.__this_folder)
+
+        os.rename(self.__this_folder + "/win_bison.exe", self.__this_folder + "/bison.exe")
+        os.rename(self.__this_folder + "/win_flex.exe", self.__this_folder + "/flex.exe")
+        os.environ["PATH"] += self.__this_folder
 
 def execute(doxygen_version=DOXYGEN_VERSION):
     installer = DOXYGENInstallation(doxygen_version)
