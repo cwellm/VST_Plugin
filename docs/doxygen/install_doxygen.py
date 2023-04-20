@@ -34,15 +34,19 @@ class DOXYGENInstallation:
 
         # configure and install the JUCE package
         print("Generating Doxygen build tree...")
-        subprocess.run(["cmake", "-S", self.__doxygen_download_folder, "-B", self.__doxygen_gen_folder, 
-                        "-D", f"FLEX_EXECUTABLE={self.__this_folder}/flex.exe",
-                        "-D", f"BISON_EXECUTABLE={self.__this_folder}/bison.exe"])
+        if "windows" in platform.system().lower():
+            subprocess.run(["cmake", "-S", self.__doxygen_download_folder, "-B", self.__doxygen_gen_folder,
+                            "-D", f"FLEX_EXECUTABLE={self.__this_folder}/winflexbison-{WIN_FLEX_BISON_VERSION}/"
+                            "bin/Release/win_flex.exe", 
+                            "-D", f"BISON_EXECUTABLE={self.__this_folder}/winflexbison-{WIN_FLEX_BISON_VERSION}/"
+                            "bin/Release/win_bison.exe"])
+
+        if "linux" in platform.system().lower():
+            subprocess.run(["cmake", "-S", self.__doxygen_download_folder, "-B", self.__doxygen_gen_folder])
 
     def build(self):
         print(f"Installing Doxygen version {self.__doxygen_version}")
-
         subprocess.run(["cmake", "--build", self.__doxygen_gen_folder])
-
 
     def get_source(self):
 
@@ -69,6 +73,26 @@ class DOXYGENInstallation:
         return self.__doxygen_binary_dir
     
     def win_get_flex_bison(self):
+
+        zip_name = f"{self.__this_folder}/winflexbison-{WIN_FLEX_BISON_VERSION}.zip"
+        winflexbison_folder = f"{self.__this_folder}/winflexbison-{WIN_FLEX_BISON_VERSION}"
+        # Immutable source .zip
+        if not os.path.exists(Path(self.__this_folder + f"/winflexbison-{WIN_FLEX_BISON_VERSION}")):
+            print(f"Downloading Win Flex Bison source version {WIN_FLEX_BISON_VERSION}...")
+            r = requests.get("https://github.com/lexxmark/winflexbison/archive/refs/tags/"
+                             f"v{WIN_FLEX_BISON_VERSION}.zip", allow_redirects=True)
+            response_code = r.status_code
+            if (response_code > 399):
+                raise HTTPError(f"Error while trying to download Win Flex Bison: Error code {response_code}")
+            with open(zip_name, "wb") as file:
+                file.write(r.content)
+            with zipfile.ZipFile(zip_name, "r") as zip_file:
+                zip_file.extractall(self.__this_folder)
+
+        subprocess.run(["cmake", "-S", winflexbison_folder, "-B", winflexbison_folder + "/build"])
+        subprocess.run(["cmake", "--build", winflexbison_folder + "/build", "--config", "Release"])
+
+        """
         os.environ["PATH"] += self.__this_folder
 
         if os.path.exists(self.__this_folder + "/bison.exe"):
@@ -92,6 +116,7 @@ class DOXYGENInstallation:
         os.rename(self.__this_folder + "/win_bison.exe", self.__this_folder + "/bison.exe")
         os.rename(self.__this_folder + "/win_flex.exe", self.__this_folder + "/flex.exe")
         os.environ["PATH"] += self.__this_folder
+        """
 
 def execute(doxygen_version=DOXYGEN_VERSION):
     installer = DOXYGENInstallation(doxygen_version)

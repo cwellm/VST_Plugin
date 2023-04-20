@@ -11,6 +11,7 @@ localnotes*
 # Doxygen
 docs/doxygen/doxygen*
 docs/generated
+winflexbison*/
 
 # Python 
 *.pyc
