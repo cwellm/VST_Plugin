@@ -1,6 +1,5 @@
 name: Documentation
 
-# TODO: Do not trigger on pull request...only now for testing!
 on:
   push:
     branches:

@@ -1,0 +1,27 @@
+name: Documentation
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-docs:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-20.04, windows-2019, windows-2022]
+    runs-on: ${{ matrix.os }}
+    continue-on-error: false
+    steps:
+      - name: "Build info"
+        run: echo "Trying to build on OS ${{ matrix.os }}"
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Python dependencies for build scripts
+        run: pip install -r requirements.txt
+      - name: Build documentation with the supplied Python script
+        run: python generate_documentation.py
