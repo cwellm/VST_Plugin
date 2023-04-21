@@ -13,6 +13,16 @@ message(STATUS "Trying to find package JUCE...")
 find_package(JUCE CONFIG REQUIRED)
 message(STATUS "Package JUCE found!")
 
+#//  global compilation flag configuring windows sdk headers
+#//  preventing inclusion of min and max macros clashing with <limits>
+#define NOMINMAX 1
+
+#//  override byte to prevent clashes with <cstddef>
+#define byte win_byte_override
+
+#add_compile_definitions(NOMINMAX=1 byte=win_byte_override)
+#add_compile_definitions(_HAS_STD_BYTE=0)
+
 set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 
 juce_add_plugin(Additive_Synth 

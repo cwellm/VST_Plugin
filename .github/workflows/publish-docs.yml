@@ -1,0 +1,46 @@
+name: Publish Documentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Python dependencies for build scripts
+        run: pip install -r requirements.txt
+      - name: Build documentation with the supplied Python script
+        run: python generate_documentation.py
+      - name: Upload docs as artifact
+        uses: actions/upload-pages-artifact@v1.0.8
+        with: 
+          name: "doxygen-docs"
+          path: "docs/generated/html"
+          retention-days: "7"
+
+  publish-docs:
+    needs: build-docs
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Publish Doxygen Documentation
+        uses: actions/deploy-pages@v2.0.1
+        with:
+          artifact_name: "doxygen-docs"
