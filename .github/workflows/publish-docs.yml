@@ -24,7 +24,7 @@ jobs:
         uses: actions/upload-pages-artifact@v1.0.8
         with: 
           name: "doxygen-docs"
-          path: "docs/doxygen/generated/html"
+          path: "docs/generated/html"
           retention-days: "7"
 
   publish-docs:
