@@ -37,7 +37,6 @@ class VSTRecipe(ConanFile):
 
     def generate(self):
 
-        
         juce_installation_dir = self.generators_folder + "/" + self.JUCE_INSTALLATION_REL_DIRECTORY
         juce_installation(self.JUCE_VERSION, juce_installation_dir)
 
@@ -50,7 +49,6 @@ class VSTRecipe(ConanFile):
         cmake = CMake(self)
         juce_options = self.JUCE_OPTIONS
 
-        juce_options |= {"CMAKE_PREFIX_PATH": juce_installation_dir}
         juce_options.update({"CMAKE_PREFIX_PATH": juce_installation_dir, "JUCE_MODULE_INCLUDE_DIR": 
                              juce_installation_dir + f"/include/JUCE-{self.JUCE_VERSION}/modules"})
         cmake.configure(variables=juce_options)

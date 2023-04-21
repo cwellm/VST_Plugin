@@ -40,8 +40,8 @@ class JUCEInstallation:
         # Immutable source .zip
         if not os.path.exists(Path(self.__juce_download_folder)):
             print("Downloading JUCE source...")
-            r = requests.get(f"https://github.com/juce-framework/JUCE/archive/refs/tags/\
-                             {self.__juce_version}.zip")
+            r = requests.get("https://github.com/juce-framework/JUCE/archive/refs/tags/"\
+                             f"{self.__juce_version}.zip")
             with open(zip_name, "wb") as file:
                 file.write(r.content)
             with zipfile.ZipFile(zip_name, "r") as zip_file:
