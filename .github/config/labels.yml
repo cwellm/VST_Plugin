@@ -69,3 +69,7 @@
 - name: experimental
   color: '000000'
   description: Some experimental changes, e.g. innovative parts or not-yet-tested implementations
+
+- name: dependabot
+  color: '9F3434'
+  description: Some experimental changes, e.g. innovative parts or not-yet-tested implementations
