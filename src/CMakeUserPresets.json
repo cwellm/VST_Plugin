@@ -1,9 +1,0 @@
-{
-    "version": 4,
-    "vendor": {
-        "conan": {}
-    },
-    "include": [
-        "C:\\Users\\christoph\\GitHub\\VST_Plugin\\build\\build\\generators\\CMakePresets.json"
-    ]
-}

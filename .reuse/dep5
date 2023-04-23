@@ -1,0 +1,5 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: .github/* .vs/*  requirements* config/dep/conan/* res/*
+Copyright: 2023 Christoph Wellm <christoph.wellm@creaflect.de>
+License: CC0-1.0
