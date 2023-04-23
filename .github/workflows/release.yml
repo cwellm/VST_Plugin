@@ -1,0 +1,22 @@
+name: Release Next Version
+on:
+  workflow_dispatch:
+
+jobs:
+  create-build-artifacts:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+
+  deploy-to-registry:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+
+  publish-release:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
