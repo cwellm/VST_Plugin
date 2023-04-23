@@ -72,4 +72,4 @@
 
 - name: dependabot
   color: '9F3434'
-  description: Some experimental changes, e.g. innovative parts or not-yet-tested implementations
+  description: Dependabot-automated things.
