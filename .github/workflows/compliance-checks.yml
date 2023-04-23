@@ -1,0 +1,12 @@
+name: Compliance Checks
+
+on: [push, pull_request]
+
+jobs:
+  reuse-compliance:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+    - name: REUSE Compliance Check
+      uses: fsfe/reuse-action@v1
