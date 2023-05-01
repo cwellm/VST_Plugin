@@ -18,10 +18,14 @@ from conan import ConanFile
 from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
 from conan.tools.microsoft import MSBuildToolchain
 
-import os
+import os, sys, importlib
 import shutil
 from pathlib import Path
 import subprocess
+
+import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import ParseError
+
 
 from conan.tools.files import download, unzip, check_sha1
 
@@ -30,6 +34,9 @@ from src.JUCE.install_juce import execute as juce_installation
 
 class VSTRecipe(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
+
+    this_folder = str(Path(__file__).parent.resolve())
+    config_file_path = f"{this_folder}/config/pluginfo.xml"
 
     JUCE_VERSION = "7.0.5"
     JUCE_INSTALLATION_REL_DIRECTORY = f"JUCE-{JUCE_VERSION}"
@@ -53,6 +60,8 @@ class VSTRecipe(ConanFile):
 
     def generate(self):
 
+        PLUGIN_VERSION = self.get_plugin_version()
+
         juce_installation_dir = self.generators_folder + "/" + self.JUCE_INSTALLATION_REL_DIRECTORY
         juce_installation(self.JUCE_VERSION, juce_installation_dir)
 
@@ -66,9 +75,30 @@ class VSTRecipe(ConanFile):
         juce_options = self.JUCE_OPTIONS
 
         juce_options.update({"CMAKE_PREFIX_PATH": juce_installation_dir, "JUCE_MODULE_INCLUDE_DIR": 
-                             juce_installation_dir + f"/include/JUCE-{self.JUCE_VERSION}/modules"})
+                             juce_installation_dir + f"/include/JUCE-{self.JUCE_VERSION}/modules",
+                             "PROJECT_VERSION": PLUGIN_VERSION, "CUSTOM_INSTALL_PATH":
+                             self.this_folder + "/vst3"})
         cmake.configure(variables=juce_options)
 
     def build(self):
         cmake = CMake(self)
         cmake.build()
+
+    def get_plugin_version(self):
+        # if file with reasonable info present, take value from there, otherwise default to 1.0
+
+        default = 1.0
+
+        try:
+            with open(self.config_file_path, "r") as file:
+                xml_tree = ET.parse(file)
+                root = xml_tree.getroot()
+                version = root.find("version").text
+                print(f"Version found: {version}")
+                return version
+
+        except (FileNotFoundError, ParseError) as e:
+            print("Error occured while trying to parse plugin version: \n",
+                  str(e), "\n", 
+                  f"...using default version value: {default}.")
+            return "1.0"

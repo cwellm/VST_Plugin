@@ -16,7 +16,8 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-project(Additive_Synth VERSION 1.0 LANGUAGES C CXX)
+
+project(Additive_Synth VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
 
 if (CMAKE_BUILD_TYPE)
 	message(STATUS "Build type = ${CMAKE_BUILD_TYPE}")
@@ -42,10 +43,12 @@ message(STATUS "Package JUCE found!")
 set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 
 juce_add_plugin(Additive_Synth 
-	VERSION 1.0
+	VERSION ${PROJECT_VERSION}
 	FORMATS VST3 Standalone
 	IS_SYNTH TRUE
 	NEEDS_MIDI_INPUT TRUE
+	COPY_PLUGIN_AFTER_BUILD TRUE
+	VST3_COPY_DIR ${CUSTOM_INSTALL_PATH}
 )
 
 target_sources(Additive_Synth PRIVATE 
@@ -99,3 +102,4 @@ target_sources(Additive_Synth PRIVATE
 	components/ADSRComponent.h 
 	components/ADSRComponent.cpp 
 )
+
