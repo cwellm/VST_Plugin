@@ -71,6 +71,13 @@ Feel free to let me know about your experiences with your setup, so I can extend
 
 ### Installation
 
+#### Current Version
+
+[Windows 2019](https://github.com/cwellm/VST_Plugin/suites/12591900072/artifacts/673521211)
+[Windows 2022](https://github.com/cwellm/VST_Plugin/suites/12591900072/artifacts/673521212)
+[Ubuntu 20.04](https://github.com/cwellm/VST_Plugin/suites/12591900072/artifacts/673521209)
+[Ubuntu 22.04](https://github.com/cwellm/VST_Plugin/suites/12591900072/artifacts/673521210)
+
 ### Documentation
 
 You can find the [Doxygen](https://www.doxygen.nl/index.html) code documentation on the [Github Pages](https://cwellm.github.io/VST_Plugin/) for this repository. You can also create the 
