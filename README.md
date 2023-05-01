@@ -73,6 +73,8 @@ Feel free to let me know about your experiences with your setup, so I can extend
 
 #### Current Version
 
+Right click, "save link as..."
+
 [Windows 2019](artifacts/windows-2019-V0.1.zip)
 
 [Windows 2022](artifacts/windows-2022-V0.1.zip)
