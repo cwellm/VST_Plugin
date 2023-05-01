@@ -74,9 +74,14 @@ Feel free to let me know about your experiences with your setup, so I can extend
 #### Current Version
 
 [Windows 2019](https://github.com/cwellm/VST_Plugin/suites/12591900072/artifacts/673521211)
+
 [Windows 2022](https://github.com/cwellm/VST_Plugin/suites/12591900072/artifacts/673521212)
+
 [Ubuntu 20.04](https://github.com/cwellm/VST_Plugin/suites/12591900072/artifacts/673521209)
+
 [Ubuntu 22.04](https://github.com/cwellm/VST_Plugin/suites/12591900072/artifacts/673521210)
+
+These are readily-built _.vst3_ which you can simply download put into your VST3 Plugin directory. 
 
 ### Documentation
 
