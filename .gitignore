@@ -20,8 +20,9 @@ build/
 src/JUCE/JUCE-*
 
 # diverse
-localnotes*
 *.zip
+!artifacts/*
+localnotes*
 *.exe
 
 # Doxygen
