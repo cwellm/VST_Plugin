@@ -20,7 +20,7 @@ jobs:
       - name: Build documentation with the supplied Python script
         run: python generate_documentation.py
       - name: Upload docs as artifact
-        uses: actions/upload-pages-artifact@v1.0.8
+        uses: actions/upload-pages-artifact@v1.0.9
         with: 
           name: "doxygen-docs"
           path: "docs/generated/html"
